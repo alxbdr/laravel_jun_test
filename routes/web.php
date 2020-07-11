@@ -13,10 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::redirect('/', '/list');
+Route::redirect('/', '/codes/list');
 
 Auth::routes();
 
-Route::get('/list', 'CodesController@list')->name('home');
-Route::get('/create', 'CodesController@create');
-Route::get('/delete', 'CodesController@delete');
+Route::get('/codes/list', 'CodesController@list')->name('home');
+Route::get('/codes/create', 'CodesController@create')->name('create');
+Route::get('/codes/delete', 'CodesController@delete')->name('delete');
+
+Route::post('/codes/store', 'CodesController@store');
+Route::post('/codes/destroy', 'CodesController@destroy');

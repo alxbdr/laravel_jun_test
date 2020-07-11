@@ -13,6 +13,30 @@
                             {{ session('status') }}
                         </div>
                     @endif
+
+                    @if(count($codes) > 0)
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Kod</th>
+                                    <th>Dodany</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($codes as $code)
+                                    <tr>
+                                        <th>{{ $code->id }}</th>
+                                        <th>{{ $code->code }}</th>
+                                        <th>{{ $code->created_at }}</th>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                    @else
+                        Brak kodów w bazie danych
+                    @endif
                 </div>
             </div>
         </div>
