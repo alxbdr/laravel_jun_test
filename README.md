@@ -1,4 +1,11 @@
 Laravel junior test project
+
+
+<br>
+php 7.3
+npm
+composer
+
 <br><br>
 Installation
 
