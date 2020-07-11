@@ -48,7 +48,7 @@ class CodesController extends Controller
         $validatedData = $request->validate([
             'number' => ['required', 'integer', 'min:1', 'max:10']
         ]);
-        $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $chars = '0123456789';
         $i=0;
         $codes_array = [];
         while($i < $request->input('number')) {
