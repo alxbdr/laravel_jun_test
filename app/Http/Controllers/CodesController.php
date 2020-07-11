@@ -50,16 +50,18 @@ class CodesController extends Controller
         ]);
         $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $i=0;
+        $codes_array = [];
         while($i < $request->input('number')) {
             $random = substr(str_shuffle($chars), 0, 10);
             if(!$code->where('code', $random)->count()) {
-               $code->fill([
-                    'code'=>$random
-                ]);             
+                $codes_array[] = [
+                    'code' => $random,
+                    'created_at' => now()
+                ];
                 $i++;
             }      
         }
-        $code->save();
+        $code->insert($codes_array);
 
         return redirect()->route('create')->with('success', 'Kody zostały pomyślnie wygenerowane');
     }
@@ -90,14 +92,20 @@ class CodesController extends Controller
         $input = trim($request->input('codes'));
         $array = preg_split("/[\s,]+/", $input);
         $codes_id_array = [];
+        $codes_not_exist = [];
         foreach ($array as $string) {
-            if(!$code->where('code', $string)->count()) {
-                return redirect()->back()->withErrors(['codes'=>'Kod ' .$string. ' nie istnieje'])->withInput();
-            }  
-            $codes_id_array []= $code->where('code', $string)->pluck('id'); 
+            $model = $code->where('code', $string)->select('id')->first();
+            if(!$model) {
+                $codes_not_exist[] = $string;
+            } else {
+                $codes_id_array [] = $model->id;
+            }
+         }
+         if (count($codes_not_exist) > 0) {
+            return redirect()->back()->withErrors(['codes'=>'Kody ' . implode(', ' , $codes_not_exist) . ' nie istnieja'])->withInput();
          }
          $code->destroy($codes_id_array);
 
-         return redirect()->route('delete')->with('success', 'Kody zostały usuniete');
+         return redirect()->route('delete')->with('success', 'Kody ID '.implode(', ' , $codes_id_array).' zostały usuniete');
         }
 }

@@ -17,10 +17,10 @@
                         @csrf
 
                         <div class="form-group row">
-                            <label for="Codes" class="col-md-4 col-form-label text-md-right"><b>Wpisz kody do usunienica</b></label>
+                            <label for="Codes" class="col-md-4 col-form-label text-md-right"><b>Wpisz kody do usuniecia</b></label>
 
                             <div class="col-md-6">
-                                <textarea id="codes" name="codes" class="form-control @error('codes') is-invalid @enderror" value="{{ old('codes') }}" required autocomplete="codes" autofocus></textarea>
+                                <textarea id="codes" name="codes" class="form-control @error('codes') is-invalid @enderror" required autocomplete="codes" autofocus>{{ old('codes') }}</textarea>
                                     @error('codes')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
