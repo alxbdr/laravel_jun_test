@@ -10,6 +10,10 @@ class CodesController extends Controller
 {
     //
 
+    public function __construct () {
+        $this->middleware('auth');
+    }
+
     /**
      * Show the list of codes
      * 
