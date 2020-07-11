@@ -11,7 +11,7 @@ class CodesController extends Controller
     //
 
     public function __construct () {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
 
     /**
@@ -23,7 +23,6 @@ class CodesController extends Controller
     public function list(Code $code) {
         return view('list', [
             'title'=>'Lista kodów', 
-            'codes'=>$code->all()
         ]);
     }
 
