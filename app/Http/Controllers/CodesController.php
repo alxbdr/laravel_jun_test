@@ -79,23 +79,17 @@ class CodesController extends Controller
         $validatedData = $request->validate([
             'codes' => ['required', 'string', 'min:10']
         ]);
-        $input = trim($request->input('codes'));
-        $array = preg_split("/[\s,]+/", $input);
-        $codes_id_array = [];
-        $codes_not_exist = [];
-        foreach ($array as $string) {
-            $model = $code->where('code', $string)->select('id')->first();
-            if(!$model) {
-                $codes_not_exist[] = $string;
-            } else {
-                $codes_id_array [] = $model->id;
-            }
-         }
-         if (count($codes_not_exist) > 0) {
-            return redirect()->back()->withErrors(['codes'=>'Kody ' . implode(', ' , $codes_not_exist) . ' nie istnieja'])->withInput();
-         }
-         $code->destroy($codes_id_array);
-
-         return redirect()->route('delete')->with('success', 'Kody ID '.implode(', ' , $codes_id_array).' zostały usuniete');
+        $codes = preg_split("/[\s,]+/", trim($request->input('codes')));
+        if (!count($codes) > 0) {
+            return redirect()->back()->withErrors(['codes'=>'Wpisz poprawny kod'])->withInput();
         }
+
+        $delete = $code->delete_codes ($codes);
+        
+        if ($delete['error']) {
+            return redirect()->back()->withErrors(['codes'=>'Kody ' . implode(', ' , $delete['not_exist']) . ' nie istnieja'])->withInput();
+        }
+
+        return redirect()->route('delete')->with('success', 'Usunieto '. $delete['count'].' kodow. Lista: '.implode(', ' , $delete['codes']));
+    }
 }
