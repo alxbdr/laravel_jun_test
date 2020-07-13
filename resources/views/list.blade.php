@@ -21,6 +21,8 @@
                                     <th>ID</th>
                                     <th>Kod</th>
                                     <th>Dodany</th>
+                                    <th>Uzytkownik</th>
+                                    <th>Email</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -29,6 +31,8 @@
                                         <th>{{ $code->id }}</th>
                                         <th>{{ $code->code }}</th>
                                         <th>{{ $code->created_at }}</th>
+                                        <th>{{ $code->user->name }}</th>
+                                        <th>{{ $code->user->email }}</th>
                                     </tr>
                                 @endforeach
                             </tbody>

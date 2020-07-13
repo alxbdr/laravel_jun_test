@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Code;
+use App\Models\Code;
 
 class CodesController extends Controller
 {
@@ -48,20 +48,10 @@ class CodesController extends Controller
         $validatedData = $request->validate([
             'number' => ['required', 'integer', 'min:1', 'max:10']
         ]);
-        $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $i=0;
-        $codes_array = [];
-        while($i < $request->input('number')) {
-            $random = substr(str_shuffle($chars), 0, 10);
-            if(!$code->where('code', $random)->count()) {
-                $codes_array[] = [
-                    'code' => $random,
-                    'created_at' => now()
-                ];
-                $i++;
-            }      
+        $store = $code->generate_codes ('0123456789', $request->input('number'));
+        if(!$store) {
+            return redirect()->route('create')->withErrors(['number'=>'Wystapil problem, kody nie zostaly wygenerowane'])->withInput();
         }
-        $code->insert($codes_array);
 
         return redirect()->route('create')->with('success', 'Kody zostały pomyślnie wygenerowane');
     }
