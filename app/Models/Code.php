@@ -22,14 +22,14 @@ class Code extends Model
     }
 
     /**
-     * Insert random codes in DB
+     * Insert unique random codes in DB
      * 
-     * @param String $chars 
      * @param Integer $quantity 
+     * @param String $chars 
      * 
      * @return boolean
      */
-    public function generate_codes ($chars, int $quantity) {
+    public function generate_codes (int $quantity, $chars) {
         $i=0;
         $codes_array = [];
         while($i < $quantity) {
@@ -46,5 +46,35 @@ class Code extends Model
 
         return $this->insert($codes_array);
     }
+
+    /**
+     * Delete codes from DB if exists
+     * 
+     * @param Array $codes
+     * 
+     * @return Array $result
+     */
+    public function delete_codes (array $codes) {
+        $result = [];
+        $result['error'] = false;
+        $result['codes_id'] = [];
+        $codes_id = [];
+        foreach ($codes as $string) {
+            $model = $this->where('code', $string)->first();
+            if(!$model) {
+                $result['error'] = true;
+                $result['not_exist'][] = $string;
+            } else {
+                $codes_id [] = $model->id;
+                $result['codes'][] = $model->code;
+            }
+         }
+        if (!$result['error']) {
+            $result['count'] = $this->destroy($codes_id);
+        }
+        
+        return $result;
+    }
+
 
 }
