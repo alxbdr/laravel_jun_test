@@ -45,4 +45,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(Codes::class);
     }
+
+    /**
+     * Destroy all codes that owns by user
+     * Destroy user profile
+     *
+     * @param $id
+     * 
+     * @return integer
+     */
+    public function destroy_profile($id) {
+        $deleted_codes = Code::where('user_id', $id)->delete();
+        return $this->destroy($id);
+    }
 }
