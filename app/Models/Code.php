@@ -22,14 +22,14 @@ class Code extends Model
     }
 
     /**
-     * Insert random codes in DB
+     * Insert unique random codes in DB
      * 
-     * @param String $chars 
      * @param Integer $quantity 
+     * @param String $chars 
      * 
      * @return boolean
      */
-    public function generate_codes ($chars, int $quantity) {
+    public function generate_codes (int $quantity, $chars) {
         $i=0;
         $codes_array = [];
         while($i < $quantity) {
@@ -48,7 +48,7 @@ class Code extends Model
     }
 
     /**
-     * Delete array of codes from DB
+     * Delete codes from DB if exists
      * 
      * @param Array $codes
      * 
@@ -75,6 +75,4 @@ class Code extends Model
         
         return $result;
     }
-
-
 }

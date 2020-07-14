@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Code;
+use App\Http\Requests\DeleteCodes;
+use App\Http\Requests\StoreCodes;
 
 class CodesController extends Controller
 {
@@ -20,7 +22,7 @@ class CodesController extends Controller
      * @param  \App\Code $code
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function list(Code $code) {
+    public function list() {
         return view('list', [
             'title'=>'Lista kodów', 
         ]);
@@ -40,15 +42,14 @@ class CodesController extends Controller
     /**
      * Generate codes and store created codes in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Requests\StoreCodes  $request
      * @param  \App\Code $code
      * @return \Illuminate\Http\Response
      */
-    public function store (Request $request, Code $code) {
-        $validatedData = $request->validate([
-            'number' => ['required', 'integer', 'min:1', 'max:10']
-        ]);
-        $store = $code->generate_codes ('0123456789', $request->input('number'));
+    public function store (StoreCodes $request, Code $code) {
+        $validated = $request->validated();
+        //Generate new unique codes using provided characters set
+        $store = $code->generate_codes ($validated['number'], '0123456789');
         if(!$store) {
             return redirect()->route('create')->withErrors(['number'=>'Wystapil problem, kody nie zostaly wygenerowane'])->withInput();
         }
@@ -70,20 +71,15 @@ class CodesController extends Controller
     /**
      * Remove the specified codes from storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Requests\DeleteCodes  $request
      * @param  \App\Code  $code
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, Code $code) {
 
-        $validatedData = $request->validate([
-            'codes' => ['required', 'string', 'min:10']
-        ]);
-        $codes = preg_split("/[\s,]+/", trim($request->input('codes')));
-        if (!count($codes) > 0) {
-            return redirect()->back()->withErrors(['codes'=>'Wpisz poprawny kod'])->withInput();
-        }
-
+    public function destroy(DeleteCodes $request, Code $code) {
+        //Get validated codes from input
+        $codes = $request->validated();
+        //Check if requested codes exist and delete
         $delete = $code->delete_codes ($codes);
         
         if ($delete['error']) {
