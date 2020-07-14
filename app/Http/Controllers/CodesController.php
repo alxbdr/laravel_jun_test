@@ -75,10 +75,23 @@ class CodesController extends Controller
      * @param  \App\Code  $code
      * @return \Illuminate\Http\Response
      */
+<<<<<<< HEAD
     public function destroy(DeleteCodes $request, Code $code) {
         //Get validated codes from input
         $codes = $request->validated();
         //Check if requested codes exist and delete
+=======
+    public function destroy(Request $request, Code $code) {
+
+        $validatedData = $request->validate([
+            'codes' => ['required', 'string', 'min:10']
+        ]);
+        $codes = preg_split("/[\s,]+/", trim($request->input('codes')));
+        if (!count($codes) > 0) {
+            return redirect()->back()->withErrors(['codes'=>'Wpisz poprawny kod'])->withInput();
+        }
+
+>>>>>>> e189d4bc8d9252713e5b9efe10dc642b3aabc307
         $delete = $code->delete_codes ($codes);
         
         if ($delete['error']) {

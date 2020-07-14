@@ -48,7 +48,11 @@ class Code extends Model
     }
 
     /**
+<<<<<<< HEAD
      * Delete codes from DB if exists
+=======
+     * Delete array of codes from DB
+>>>>>>> e189d4bc8d9252713e5b9efe10dc642b3aabc307
      * 
      * @param Array $codes
      * 
